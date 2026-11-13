@@ -6,6 +6,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Calendar Versioning](https://calver.org/) of
 the following form: YYYY.0M.0D.
 
+## 2026.11.12
+
+### Added
+
+- Designed kernel and enhanced interfaces for Inventory component
+- Designed abstract class for Inventory component
+- Implemented Inventory1L kernel class layered on Map
+- Designed test suite for Inventory component
+- Designed two different use cases for Inventory component
+
 ## [Unreleased]
 
 - Fixed an issue where the course URLs dropped the `web-sw1` paths
