@@ -3,9 +3,9 @@ package components.inventory;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotSame;
 
-import java.util.Map;
-
 import org.junit.Test;
+
+import components.map.Map;
 
 /**
  * Tests for the kernel and Standard methods of Inventory1L.
@@ -13,6 +13,35 @@ import org.junit.Test;
  * @author Tejas Naik
  */
 public class Inventory1LTest {
+
+    /*
+     * Test quantities -----------------------------------------------------
+     */
+
+    /**
+     * Quantity of apples used in most tests.
+     */
+    private static final int APPLES = 8;
+
+    /**
+     * Quantity of oranges used in most tests.
+     */
+    private static final int ORANGES = 4;
+
+    /**
+     * A small quantity to add or remove.
+     */
+    private static final int FEW = 3;
+
+    /**
+     * A medium quantity to add or remove.
+     */
+    private static final int SOME = 5;
+
+    /**
+     * Number of distinct item types in the three-item tests.
+     */
+    private static final int THREE_TYPES = 3;
 
     /**
      * Creates an inventory from alternating item names and quantities.
@@ -61,11 +90,11 @@ public class Inventory1LTest {
     public void testAddNewItem() {
         Inventory inv = create();
 
-        inv.add("apples", 8);
+        inv.add("apples", APPLES);
 
-        assertEquals(8, inv.quantityOf("apples"));
+        assertEquals(APPLES, inv.quantityOf("apples"));
         assertEquals(1, inv.size());
-        assertEquals(create("apples", 8), inv);
+        assertEquals(create("apples", APPLES), inv);
     }
 
     /**
@@ -73,13 +102,13 @@ public class Inventory1LTest {
      */
     @Test
     public void testAddExistingItem() {
-        Inventory inv = create("apples", 5);
+        Inventory inv = create("apples", SOME);
 
-        inv.add("apples", 3);
+        inv.add("apples", FEW);
 
-        assertEquals(8, inv.quantityOf("apples"));
+        assertEquals(SOME + FEW, inv.quantityOf("apples"));
         assertEquals(1, inv.size());
-        assertEquals(create("apples", 8), inv);
+        assertEquals(create("apples", SOME + FEW), inv);
     }
 
     /**
@@ -87,14 +116,14 @@ public class Inventory1LTest {
      */
     @Test
     public void testAddCaseSensitive() {
-        Inventory inv = create("Apple", 5);
+        Inventory inv = create("Apple", SOME);
 
-        inv.add("apple", 3);
+        inv.add("apple", FEW);
 
-        assertEquals(5, inv.quantityOf("Apple"));
-        assertEquals(3, inv.quantityOf("apple"));
+        assertEquals(SOME, inv.quantityOf("Apple"));
+        assertEquals(FEW, inv.quantityOf("apple"));
         assertEquals(2, inv.size());
-        assertEquals(create("Apple", 5, "apple", 3), inv);
+        assertEquals(create("Apple", SOME, "apple", FEW), inv);
     }
 
     /*
@@ -106,13 +135,13 @@ public class Inventory1LTest {
      */
     @Test
     public void testRemovePartialQuantity() {
-        Inventory inv = create("apples", 8);
+        Inventory inv = create("apples", APPLES);
 
-        inv.remove("apples", 3);
+        inv.remove("apples", FEW);
 
-        assertEquals(5, inv.quantityOf("apples"));
+        assertEquals(APPLES - FEW, inv.quantityOf("apples"));
         assertEquals(1, inv.size());
-        assertEquals(create("apples", 5), inv);
+        assertEquals(create("apples", APPLES - FEW), inv);
     }
 
     /**
@@ -120,13 +149,13 @@ public class Inventory1LTest {
      */
     @Test
     public void testRemoveEntireQuantity() {
-        Inventory inv = create("apples", 8, "oranges", 4);
+        Inventory inv = create("apples", APPLES, "oranges", ORANGES);
 
-        inv.remove("apples", 8);
+        inv.remove("apples", APPLES);
 
         assertEquals(0, inv.quantityOf("apples"));
         assertEquals(1, inv.size());
-        assertEquals(create("oranges", 4), inv);
+        assertEquals(create("oranges", ORANGES), inv);
     }
 
     /*
@@ -138,12 +167,12 @@ public class Inventory1LTest {
      */
     @Test
     public void testRemoveAnyOneItem() {
-        Inventory inv = create("apples", 8);
+        Inventory inv = create("apples", APPLES);
 
         Map.Pair<String, Integer> removed = inv.removeAny();
 
         assertEquals("apples", removed.key());
-        assertEquals(8, removed.value().intValue());
+        assertEquals(APPLES, removed.value().intValue());
         assertEquals(0, inv.size());
         assertEquals(create(), inv);
     }
@@ -153,17 +182,17 @@ public class Inventory1LTest {
      */
     @Test
     public void testRemoveAnyMultipleItems() {
-        Inventory inv = create("apples", 8, "oranges", 4);
+        Inventory inv = create("apples", APPLES, "oranges", ORANGES);
 
         Map.Pair<String, Integer> removed = inv.removeAny();
 
         if (removed.key().equals("apples")) {
-            assertEquals(8, removed.value().intValue());
-            assertEquals(create("oranges", 4), inv);
+            assertEquals(APPLES, removed.value().intValue());
+            assertEquals(create("oranges", ORANGES), inv);
         } else {
             assertEquals("oranges", removed.key());
-            assertEquals(4, removed.value().intValue());
-            assertEquals(create("apples", 8), inv);
+            assertEquals(ORANGES, removed.value().intValue());
+            assertEquals(create("apples", APPLES), inv);
         }
 
         assertEquals(1, inv.size());
@@ -178,11 +207,11 @@ public class Inventory1LTest {
      */
     @Test
     public void testQuantityOfPresentItem() {
-        Inventory inv = create("apples", 8, "oranges", 4);
+        Inventory inv = create("apples", APPLES, "oranges", ORANGES);
 
-        assertEquals(8, inv.quantityOf("apples"));
-        assertEquals(4, inv.quantityOf("oranges"));
-        assertEquals(create("apples", 8, "oranges", 4), inv);
+        assertEquals(APPLES, inv.quantityOf("apples"));
+        assertEquals(ORANGES, inv.quantityOf("oranges"));
+        assertEquals(create("apples", APPLES, "oranges", ORANGES), inv);
     }
 
     /**
@@ -190,10 +219,10 @@ public class Inventory1LTest {
      */
     @Test
     public void testQuantityOfAbsentItem() {
-        Inventory inv = create("apples", 8);
+        Inventory inv = create("apples", APPLES);
 
         assertEquals(0, inv.quantityOf("oranges"));
-        assertEquals(create("apples", 8), inv);
+        assertEquals(create("apples", APPLES), inv);
     }
 
     /**
@@ -201,11 +230,11 @@ public class Inventory1LTest {
      */
     @Test
     public void testQuantityOfCaseSensitive() {
-        Inventory inv = create("apples", 8);
+        Inventory inv = create("apples", APPLES);
 
-        assertEquals(8, inv.quantityOf("apples"));
+        assertEquals(APPLES, inv.quantityOf("apples"));
         assertEquals(0, inv.quantityOf("Apples"));
-        assertEquals(create("apples", 8), inv);
+        assertEquals(create("apples", APPLES), inv);
     }
 
     /*
@@ -228,15 +257,16 @@ public class Inventory1LTest {
      */
     @Test
     public void testSizeDistinctItems() {
-        Inventory inv = create("apples", 8, "oranges", 4, "bananas", 2);
+        Inventory inv = create("apples", APPLES, "oranges", ORANGES,
+                "bananas", 2);
 
-        assertEquals(3, inv.size());
+        assertEquals(THREE_TYPES, inv.size());
 
-        inv.add("apples", 5);
+        inv.add("apples", SOME);
 
-        assertEquals(3, inv.size());
-        assertEquals(create("apples", 13, "oranges", 4, "bananas", 2),
-                inv);
+        assertEquals(THREE_TYPES, inv.size());
+        assertEquals(create("apples", APPLES + SOME, "oranges", ORANGES,
+                "bananas", 2), inv);
     }
 
     /**
@@ -244,12 +274,12 @@ public class Inventory1LTest {
      */
     @Test
     public void testSizeAfterRemoval() {
-        Inventory inv = create("apples", 8, "oranges", 4);
+        Inventory inv = create("apples", APPLES, "oranges", ORANGES);
 
-        inv.remove("apples", 8);
+        inv.remove("apples", APPLES);
 
         assertEquals(1, inv.size());
-        assertEquals(create("oranges", 4), inv);
+        assertEquals(create("oranges", ORANGES), inv);
     }
 
     /*
@@ -261,14 +291,14 @@ public class Inventory1LTest {
      */
     @Test
     public void testNewInstance() {
-        Inventory inv = create("apples", 8, "oranges", 4);
+        Inventory inv = create("apples", APPLES, "oranges", ORANGES);
 
         Inventory copy = inv.newInstance();
 
         assertNotSame(inv, copy);
         assertEquals(inv.getClass(), copy.getClass());
         assertEquals(create(), copy);
-        assertEquals(create("apples", 8, "oranges", 4), inv);
+        assertEquals(create("apples", APPLES, "oranges", ORANGES), inv);
     }
 
     /*
@@ -280,7 +310,7 @@ public class Inventory1LTest {
      */
     @Test
     public void testClearNonEmpty() {
-        Inventory inv = create("apples", 8, "oranges", 4);
+        Inventory inv = create("apples", APPLES, "oranges", ORANGES);
 
         inv.clear();
 
@@ -312,11 +342,11 @@ public class Inventory1LTest {
     @Test
     public void testTransferFrom() {
         Inventory destination = create("apples", 2);
-        Inventory source = create("oranges", 8, "bananas", 4);
+        Inventory source = create("oranges", APPLES, "bananas", 2);
 
         destination.transferFrom(source);
 
-        assertEquals(create("oranges", 8, "bananas", 4), destination);
+        assertEquals(create("oranges", APPLES, "bananas", 2), destination);
         assertEquals(create(), source);
     }
 
@@ -325,7 +355,7 @@ public class Inventory1LTest {
      */
     @Test
     public void testTransferFromEmptySource() {
-        Inventory destination = create("apples", 8);
+        Inventory destination = create("apples", APPLES);
         Inventory source = create();
 
         destination.transferFrom(source);
@@ -340,11 +370,12 @@ public class Inventory1LTest {
     @Test
     public void testTransferFromEmptyDestination() {
         Inventory destination = create();
-        Inventory source = create("apples", 8, "oranges", 4);
+        Inventory source = create("apples", APPLES, "oranges", ORANGES);
 
         destination.transferFrom(source);
 
-        assertEquals(create("apples", 8, "oranges", 4), destination);
+        assertEquals(create("apples", APPLES, "oranges", ORANGES),
+                destination);
         assertEquals(create(), source);
     }
 
@@ -353,15 +384,15 @@ public class Inventory1LTest {
      */
     @Test
     public void testTransferFromIndependentAfterTransfer() {
-        Inventory destination = create("apples", 8);
-        Inventory source = create("oranges", 4);
+        Inventory destination = create("apples", APPLES);
+        Inventory source = create("oranges", ORANGES);
 
         destination.transferFrom(source);
 
-        source.add("bananas", 3);
+        source.add("bananas", FEW);
 
-        assertEquals(create("oranges", 4), destination);
-        assertEquals(create("bananas", 3), source);
+        assertEquals(create("oranges", ORANGES), destination);
+        assertEquals(create("bananas", FEW), source);
     }
 
 }

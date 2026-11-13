@@ -1,6 +1,6 @@
 package components.inventory;
 
-import java.util.Map;
+import components.map.Map;
 
 /**
  * Layered implementations of secondary methods for Inventory.

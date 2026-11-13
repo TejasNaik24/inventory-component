@@ -1,7 +1,6 @@
 package components.inventory;
 
-import java.util.Map;
-
+import components.map.Map;
 import components.map.Map1L;
 
 /**
