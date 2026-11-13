@@ -3,24 +3,24 @@
 All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
-and this project adheres to [Calendar Versioning](https://calver.org/) of
-the following form: YYYY.0M.0D.
+and this project adheres to [Calendar Versioning](https://calver.org/)
+of the following form: YYYY.0M.0D.
 
-## 2026.11.12
-
-### Added
-
-- Designed kernel and enhanced interfaces for Inventory component
-- Designed abstract class for Inventory component
-- Implemented Inventory1L kernel class layered on Map
-- Designed test suite for Inventory component
-- Designed two different use cases for Inventory component
-
-## [Unreleased]
+## Unreleased
 
 - Fixed an issue where the course URLs dropped the `web-sw1` paths
 
-## [2026.07.06]
+## 2026.11.13
+
+### Added
+
+- Added the InventoryKernel and Inventory interfaces
+- Implemented the InventorySecondary abstract class
+- Implemented the Inventory1L kernel class using Map
+- Added comprehensive tests for the Inventory component
+- Added the StoreStockroom and LootBag use cases
+
+## 2026.07.06
 
 ### Added
 
@@ -31,7 +31,7 @@ the following form: YYYY.0M.0D.
 
 - Removed TODO tree extension and replaced with fork
 
-## [2026.01.07]
+## 2026.01.07
 
 ### Fixed
 
@@ -41,13 +41,13 @@ the following form: YYYY.0M.0D.
 
 - Disabled AI features globally
 
-## [2025.08.21]
+## 2025.08.21
 
 ### Removed
 
 - Disabled an aspect of the coderunner extension
 
-## [2024.12.30]
+## 2024.12.30
 
 ### Added
 
@@ -61,7 +61,7 @@ the following form: YYYY.0M.0D.
 
 - Fixed image markdown in the interfaces document
 
-## [2024.08.07]
+## 2024.08.07
 
 ### Added
 
@@ -72,28 +72,19 @@ the following form: YYYY.0M.0D.
 - Added the VSCode PDF extension to `extensions.json`
 - Added `java.debug.settings.vmArgs` setting to enable assertions (i.e., `-ea`)
 - Added information about making branches to all parts of the project
-- Added information about how to update the CHANGELOG to every part of the
-  project
-- Added information about how to make a pull request to every part of the
-  project
+- Added information about how to update the CHANGELOG to every part of the project
+- Added information about how to make a pull request to every part of the project
 
 ### Changed
 
-- Updated `settings.json` to format document on save using `editor.formatOnSave`
-  setting
-- Updated `settings.json` to exclude certain files from markdown to PDF
-  generation using `markdown-pdf.convertOnSaveExclude` setting
+- Updated `settings.json` to format document on save using `editor.formatOnSave` setting
+- Updated `settings.json` to exclude certain files from markdown to PDF generation using `markdown-pdf.convertOnSaveExclude` setting
 - Updated `settings.json` to use latest `java.cleanup.actions` setting
-- Updated `settings.json` to automatically choose line endings using `files.eol`
-  setting
-- Updated `settings.json` to organize imports automatically on save using the
-  `editor.codeActionsOnSave` and `source.organizeImports` settings
-- Changed the component brainstorming assignment to ask a few clarifying
-  questions
-- Changed the component brainstorming example from `Point3D` to `NaturalNumber`
-  to avoid the getter/setter trend
-- Updated assignment feedback sections to include a link to a survey that
-  I'll actually review
+- Updated `settings.json` to automatically choose line endings using `files.eol` setting
+- Updated `settings.json` to organize imports automatically on save using the `editor.codeActionsOnSave` and `source.organizeImports` settings
+- Changed the component brainstorming assignment to ask a few clarifying questions
+- Changed the component brainstorming example from `Point3D` to `NaturalNumber` to avoid the getter/setter trend
+- Updated assignment feedback sections to include a link to a survey that I'll actually review
 - Updated README to include step about using template repo
 - Updated part 3 rubric to include a hierarchy diagram
 - Updated part 6 rubric to account for overall polish
@@ -107,7 +98,7 @@ the following form: YYYY.0M.0D.
 - Removed `java.saveActions.organizeImports` setting from `settings.json`
 - Removed references to `Point3D` completely
 
-## [2024.01.07]
+## 2024.01.07
 
 ### Added
 
@@ -119,11 +110,3 @@ the following form: YYYY.0M.0D.
 - Created a README at the root to explain how to use the template repo
 - Created initial drafts of the six portfolio assessments
 - Added READMEs to key folders like `test` and `lib` to explain their purpose
-
-[unreleased]: https://github.com/jrg94/portfolio-project/compare/v2026.07.06...HEAD
-[2026.07.06]: https://github.com/jrg94/portfolio-project/compare/v2026.01.07...v2026.07.06
-[2026.01.07]: https://github.com/jrg94/portfolio-project/compare/v2025.08.21...v2026.01.07
-[2025.08.21]: https://github.com/jrg94/portfolio-project/compare/v2024.12.30...v2025.08.21
-[2024.12.30]: https://github.com/jrg94/portfolio-project/compare/v2024.08.07...v2024.12.30
-[2024.08.07]: https://github.com/jrg94/portfolio-project/compare/v2024.01.07...v2024.08.07
-[2024.01.07]: https://github.com/jrg94/portfolio-project/releases/tag/v2024.01.07
