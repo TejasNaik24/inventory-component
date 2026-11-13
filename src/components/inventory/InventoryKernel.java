@@ -28,8 +28,10 @@ public interface InventoryKernel extends Standard<Inventory> {
      *            the quantity to add
      * @updates this
      * @requires |name| > 0 and amount > 0
-     * @ensures quantityOf(name) = #quantityOf(name) + amount and
-     *          every other item's quantity in this is the same as in #this
+     * @ensures <pre>
+     * quantityOf(name) = #quantityOf(name) + amount  and
+     * [every other item's quantity in this is the same as in #this]
+     * </pre>
      */
     void add(String name, int amount);
 
@@ -42,9 +44,11 @@ public interface InventoryKernel extends Standard<Inventory> {
      *            the quantity to remove
      * @updates this
      * @requires 0 < amount <= quantityOf(name)
-     * @ensures quantityOf(name) = #quantityOf(name) - amount and
-     *          if #quantityOf(name) - amount = 0, name is absent from this,
-     *          and every other item's quantity in this is the same as in #this
+     * @ensures <pre>
+     * quantityOf(name) = #quantityOf(name) - amount  and
+     * [if quantityOf(name) = 0, then name is no longer in this]  and
+     * [every other item's quantity in this is the same as in #this]
+     * </pre>
      */
     void remove(String name, int amount);
 
