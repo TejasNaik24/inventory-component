@@ -13,6 +13,88 @@ import org.junit.Test;
  */
 public class InventoryTest {
 
+    /*
+     * Test quantities -----------------------------------------------------
+     */
+
+    /**
+     * Quantity of apples used in most tests.
+     */
+    private static final int APPLES = 8;
+
+    /**
+     * Quantity of oranges used in most tests.
+     */
+    private static final int ORANGES = 4;
+
+    /**
+     * A small quantity used in several tests.
+     */
+    private static final int SMALL = 2;
+
+    /**
+     * A small quantity to add or remove.
+     */
+    private static final int FEW = 3;
+
+    /**
+     * A medium quantity to add or remove.
+     */
+    private static final int SOME = 5;
+
+    /**
+     * A larger quantity used in stock tests.
+     */
+    private static final int SIX = 6;
+
+    /**
+     * A quantity used to test different values.
+     */
+    private static final int SEVEN = 7;
+
+    /**
+     * A quantity used in restock tests.
+     */
+    private static final int TEN = 10;
+
+    /**
+     * Number of item types in two-item tests.
+     */
+    private static final int TWO_TYPES = 2;
+
+    /**
+     * Number of item types in three-item tests.
+     */
+    private static final int THREE_TYPES = 3;
+
+    /**
+     * Number of arguments representing one item and its quantity.
+     */
+    private static final int ARGUMENTS_PER_ITEM = 2;
+
+    /*
+     * Test thresholds -----------------------------------------------------
+     */
+
+    /**
+     * Threshold used in standard low-stock tests.
+     */
+    private static final int LOW_THRESHOLD = 5;
+
+    /**
+     * A higher low-stock threshold.
+     */
+    private static final int HIGH_THRESHOLD = 6;
+
+    /**
+     * Threshold used when all items should be considered low.
+     */
+    private static final int ALL_LOW_THRESHOLD = 4;
+
+    /*
+     * Test helpers --------------------------------------------------------
+     */
+
     /**
      * Creates an inventory from alternating item names and quantities.
      *
@@ -21,11 +103,12 @@ public class InventoryTest {
      * @return the newly created inventory
      */
     private static Inventory create(Object... args) {
-        assert args.length % 2 == 0 : "Violation of: even number of arguments";
+        assert args.length % ARGUMENTS_PER_ITEM == 0
+                : "Violation of: even number of arguments";
 
         Inventory result = new Inventory1L();
 
-        for (int i = 0; i < args.length; i += 2) {
+        for (int i = 0; i < args.length; i += ARGUMENTS_PER_ITEM) {
             String name = (String) args[i];
             int amount = (Integer) args[i + 1];
             result.add(name, amount);
@@ -54,12 +137,12 @@ public class InventoryTest {
      */
     @Test
     public void testHasItemPresentAndAbsent() {
-        Inventory inv = create("apples", 8);
+        Inventory inv = create("apples", APPLES);
 
         assertTrue(inv.hasItem("apples"));
         assertFalse(inv.hasItem("oranges"));
 
-        assertEquals(create("apples", 8), inv);
+        assertEquals(create("apples", APPLES), inv);
     }
 
     /**
@@ -67,9 +150,9 @@ public class InventoryTest {
      */
     @Test
     public void testHasItemAfterRemoval() {
-        Inventory inv = create("apples", 8);
+        Inventory inv = create("apples", APPLES);
 
-        inv.remove("apples", 8);
+        inv.remove("apples", APPLES);
 
         assertFalse(inv.hasItem("apples"));
         assertEquals(create(), inv);
@@ -80,12 +163,12 @@ public class InventoryTest {
      */
     @Test
     public void testHasItemCaseSensitive() {
-        Inventory inv = create("apples", 8);
+        Inventory inv = create("apples", APPLES);
 
         assertTrue(inv.hasItem("apples"));
         assertFalse(inv.hasItem("Apples"));
 
-        assertEquals(create("apples", 8), inv);
+        assertEquals(create("apples", APPLES), inv);
     }
 
     /*
@@ -108,10 +191,10 @@ public class InventoryTest {
      */
     @Test
     public void testTotalQuantityOneItem() {
-        Inventory inv = create("apples", 8);
+        Inventory inv = create("apples", APPLES);
 
-        assertEquals(8, inv.totalQuantity());
-        assertEquals(create("apples", 8), inv);
+        assertEquals(APPLES, inv.totalQuantity());
+        assertEquals(create("apples", APPLES), inv);
     }
 
     /**
@@ -119,10 +202,12 @@ public class InventoryTest {
      */
     @Test
     public void testTotalQuantityMultipleItems() {
-        Inventory inv = create("apples", 8, "oranges", 4, "bananas", 2);
+        Inventory inv = create("apples", APPLES, "oranges", ORANGES,
+                "bananas", SMALL);
 
-        assertEquals(14, inv.totalQuantity());
-        assertEquals(create("apples", 8, "oranges", 4, "bananas", 2), inv);
+        assertEquals(APPLES + ORANGES + SMALL, inv.totalQuantity());
+        assertEquals(create("apples", APPLES, "oranges", ORANGES,
+                "bananas", SMALL), inv);
     }
 
     /*
@@ -134,12 +219,12 @@ public class InventoryTest {
      */
     @Test
     public void testRestockEmptySource() {
-        Inventory stock = create("apples", 5, "bananas", 3);
+        Inventory stock = create("apples", SOME, "bananas", FEW);
         Inventory delivery = create();
 
         stock.restock(delivery);
 
-        assertEquals(create("apples", 5, "bananas", 3), stock);
+        assertEquals(create("apples", SOME, "bananas", FEW), stock);
         assertEquals(create(), delivery);
     }
 
@@ -149,12 +234,12 @@ public class InventoryTest {
     @Test
     public void testRestockEmptyThis() {
         Inventory stock = create();
-        Inventory delivery = create("apples", 5, "oranges", 3);
+        Inventory delivery = create("apples", SOME, "oranges", FEW);
 
         stock.restock(delivery);
 
-        assertEquals(create("apples", 5, "oranges", 3), stock);
-        assertEquals(create("apples", 5, "oranges", 3), delivery);
+        assertEquals(create("apples", SOME, "oranges", FEW), stock);
+        assertEquals(create("apples", SOME, "oranges", FEW), delivery);
     }
 
     /**
@@ -162,13 +247,14 @@ public class InventoryTest {
      */
     @Test
     public void testRestockOnlyNewItems() {
-        Inventory stock = create("apples", 5);
-        Inventory delivery = create("oranges", 3, "bananas", 2);
+        Inventory stock = create("apples", SOME);
+        Inventory delivery = create("oranges", FEW, "bananas", SMALL);
 
         stock.restock(delivery);
 
-        assertEquals(create("apples", 5, "oranges", 3, "bananas", 2), stock);
-        assertEquals(create("oranges", 3, "bananas", 2), delivery);
+        assertEquals(create("apples", SOME, "oranges", FEW,
+                "bananas", SMALL), stock);
+        assertEquals(create("oranges", FEW, "bananas", SMALL), delivery);
     }
 
     /**
@@ -176,13 +262,14 @@ public class InventoryTest {
      */
     @Test
     public void testRestockOnlyOverlappingItems() {
-        Inventory stock = create("apples", 5, "oranges", 4);
-        Inventory delivery = create("apples", 3, "oranges", 2);
+        Inventory stock = create("apples", SOME, "oranges", ORANGES);
+        Inventory delivery = create("apples", FEW, "oranges", SMALL);
 
         stock.restock(delivery);
 
-        assertEquals(create("apples", 8, "oranges", 6), stock);
-        assertEquals(create("apples", 3, "oranges", 2), delivery);
+        assertEquals(create("apples", SOME + FEW, "oranges",
+                ORANGES + SMALL), stock);
+        assertEquals(create("apples", FEW, "oranges", SMALL), delivery);
     }
 
     /**
@@ -190,13 +277,14 @@ public class InventoryTest {
      */
     @Test
     public void testRestockMixedItems() {
-        Inventory stock = create("apples", 5, "bananas", 3);
-        Inventory delivery = create("apples", 4, "oranges", 6);
+        Inventory stock = create("apples", SOME, "bananas", FEW);
+        Inventory delivery = create("apples", ORANGES, "oranges", SIX);
 
         stock.restock(delivery);
 
-        assertEquals(create("apples", 9, "bananas", 3, "oranges", 6), stock);
-        assertEquals(create("apples", 4, "oranges", 6), delivery);
+        assertEquals(create("apples", SOME + ORANGES, "bananas", FEW,
+                "oranges", SIX), stock);
+        assertEquals(create("apples", ORANGES, "oranges", SIX), delivery);
     }
 
     /*
@@ -210,7 +298,7 @@ public class InventoryTest {
     public void testLowStockEmpty() {
         Inventory inv = create();
 
-        assertEquals(0, inv.lowStock(5));
+        assertEquals(0, inv.lowStock(LOW_THRESHOLD));
         assertEquals(create(), inv);
     }
 
@@ -219,10 +307,10 @@ public class InventoryTest {
      */
     @Test
     public void testLowStockAtThreshold() {
-        Inventory inv = create("apples", 5);
+        Inventory inv = create("apples", LOW_THRESHOLD);
 
-        assertEquals(0, inv.lowStock(5));
-        assertEquals(create("apples", 5), inv);
+        assertEquals(0, inv.lowStock(LOW_THRESHOLD));
+        assertEquals(create("apples", LOW_THRESHOLD), inv);
     }
 
     /**
@@ -230,10 +318,10 @@ public class InventoryTest {
      */
     @Test
     public void testLowStockThresholdOne() {
-        Inventory inv = create("apples", 1, "oranges", 10);
+        Inventory inv = create("apples", 1, "oranges", TEN);
 
         assertEquals(0, inv.lowStock(1));
-        assertEquals(create("apples", 1, "oranges", 10), inv);
+        assertEquals(create("apples", 1, "oranges", TEN), inv);
     }
 
     /**
@@ -241,10 +329,12 @@ public class InventoryTest {
      */
     @Test
     public void testLowStockAllItemsLow() {
-        Inventory inv = create("apples", 1, "oranges", 2, "bananas", 3);
+        Inventory inv = create("apples", 1, "oranges", SMALL,
+                "bananas", FEW);
 
-        assertEquals(3, inv.lowStock(4));
-        assertEquals(create("apples", 1, "oranges", 2, "bananas", 3), inv);
+        assertEquals(THREE_TYPES, inv.lowStock(ALL_LOW_THRESHOLD));
+        assertEquals(create("apples", 1, "oranges", SMALL,
+                "bananas", FEW), inv);
     }
 
     /**
@@ -252,14 +342,14 @@ public class InventoryTest {
      */
     @Test
     public void testLowStockMixedItems() {
-        Inventory inv = create("apples", 2, "oranges", 5, "bananas", 8,
-                "grapes", 4);
+        Inventory inv = create("apples", SMALL, "oranges", SOME,
+                "bananas", APPLES, "grapes", FEW + 1);
 
-        assertEquals(2, inv.lowStock(5));
-        assertEquals(3, inv.lowStock(6));
+        assertEquals(TWO_TYPES, inv.lowStock(LOW_THRESHOLD));
+        assertEquals(THREE_TYPES, inv.lowStock(HIGH_THRESHOLD));
 
-        assertEquals(create("apples", 2, "oranges", 5, "bananas", 8,
-                "grapes", 4), inv);
+        assertEquals(create("apples", SMALL, "oranges", SOME,
+                "bananas", APPLES, "grapes", FEW + 1), inv);
     }
 
     /*
@@ -271,10 +361,10 @@ public class InventoryTest {
      */
     @Test
     public void testEqualsSameObject() {
-        Inventory first = create("apples", 8);
+        Inventory first = create("apples", APPLES);
 
         assertTrue(first.equals(first));
-        assertEquals(create("apples", 8), first);
+        assertEquals(create("apples", APPLES), first);
     }
 
     /**
@@ -282,14 +372,14 @@ public class InventoryTest {
      */
     @Test
     public void testEqualsSameContentsDifferentOrder() {
-        Inventory first = create("apples", 8, "oranges", 4);
-        Inventory second = create("oranges", 4, "apples", 8);
+        Inventory first = create("apples", APPLES, "oranges", ORANGES);
+        Inventory second = create("oranges", ORANGES, "apples", APPLES);
 
         assertTrue(first.equals(second));
         assertTrue(second.equals(first));
 
-        assertEquals(create("apples", 8, "oranges", 4), first);
-        assertEquals(create("oranges", 4, "apples", 8), second);
+        assertEquals(create("apples", APPLES, "oranges", ORANGES), first);
+        assertEquals(create("oranges", ORANGES, "apples", APPLES), second);
     }
 
     /**
@@ -297,12 +387,12 @@ public class InventoryTest {
      */
     @Test
     public void testEqualsDifferentQuantities() {
-        Inventory first = create("apples", 8, "oranges", 4);
-        Inventory second = create("apples", 7, "oranges", 4);
+        Inventory first = create("apples", APPLES, "oranges", ORANGES);
+        Inventory second = create("apples", SEVEN, "oranges", ORANGES);
 
         assertFalse(first.equals(second));
 
-        assertEquals(create("apples", 8, "oranges", 4), first);
+        assertEquals(create("apples", APPLES, "oranges", ORANGES), first);
     }
 
     /**
@@ -310,12 +400,12 @@ public class InventoryTest {
      */
     @Test
     public void testEqualsDifferentItems() {
-        Inventory first = create("apples", 8);
-        Inventory second = create("bananas", 8);
+        Inventory first = create("apples", APPLES);
+        Inventory second = create("bananas", APPLES);
 
         assertFalse(first.equals(second));
 
-        assertEquals(create("apples", 8), first);
+        assertEquals(create("apples", APPLES), first);
     }
 
     /**
@@ -323,11 +413,11 @@ public class InventoryTest {
      */
     @Test
     public void testEqualsNull() {
-        Inventory first = create("apples", 8);
+        Inventory first = create("apples", APPLES);
 
         assertFalse(first.equals(null));
 
-        assertEquals(create("apples", 8), first);
+        assertEquals(create("apples", APPLES), first);
     }
 
     /**
@@ -348,13 +438,13 @@ public class InventoryTest {
     @Test
     public void testEqualsEmptyAndNonEmpty() {
         Inventory empty = create();
-        Inventory nonEmpty = create("apples", 8);
+        Inventory nonEmpty = create("apples", APPLES);
 
         assertFalse(empty.equals(nonEmpty));
         assertFalse(nonEmpty.equals(empty));
 
         assertEquals(create(), empty);
-        assertEquals(create("apples", 8), nonEmpty);
+        assertEquals(create("apples", APPLES), nonEmpty);
     }
 
     /**
@@ -362,14 +452,14 @@ public class InventoryTest {
      */
     @Test
     public void testEqualsSubset() {
-        Inventory smaller = create("apples", 8);
-        Inventory larger = create("apples", 8, "oranges", 4);
+        Inventory smaller = create("apples", APPLES);
+        Inventory larger = create("apples", APPLES, "oranges", ORANGES);
 
         assertFalse(smaller.equals(larger));
         assertFalse(larger.equals(smaller));
 
-        assertEquals(create("apples", 8), smaller);
-        assertEquals(create("apples", 8, "oranges", 4), larger);
+        assertEquals(create("apples", APPLES), smaller);
+        assertEquals(create("apples", APPLES, "oranges", ORANGES), larger);
     }
 
     /**
@@ -377,11 +467,12 @@ public class InventoryTest {
      */
     @Test
     public void testEqualsDifferentObjectType() {
-        Inventory inv = create("apples", 8);
+        Inventory inv = create("apples", APPLES);
 
-        assertFalse(inv.equals("apples"));
+        Object other = "apples";
+        assertFalse(inv.equals(other));
 
-        assertEquals(create("apples", 8), inv);
+        assertEquals(create("apples", APPLES), inv);
     }
 
     /*
@@ -406,12 +497,12 @@ public class InventoryTest {
      */
     @Test
     public void testHashCodeStable() {
-        Inventory inv = create("apples", 8, "oranges", 4);
+        Inventory inv = create("apples", APPLES, "oranges", ORANGES);
 
         int hash = inv.hashCode();
 
         assertEquals(hash, inv.hashCode());
-        assertEquals(create("apples", 8, "oranges", 4), inv);
+        assertEquals(create("apples", APPLES, "oranges", ORANGES), inv);
     }
 
     /**
@@ -419,14 +510,14 @@ public class InventoryTest {
      */
     @Test
     public void testHashCodeEqualInventories() {
-        Inventory first = create("apples", 8, "oranges", 4);
-        Inventory second = create("oranges", 4, "apples", 8);
+        Inventory first = create("apples", APPLES, "oranges", ORANGES);
+        Inventory second = create("oranges", ORANGES, "apples", APPLES);
 
         assertEquals(first, second);
         assertEquals(first.hashCode(), second.hashCode());
 
-        assertEquals(create("apples", 8, "oranges", 4), first);
-        assertEquals(create("oranges", 4, "apples", 8), second);
+        assertEquals(create("apples", APPLES, "oranges", ORANGES), first);
+        assertEquals(create("oranges", ORANGES, "apples", APPLES), second);
     }
 
     /*
@@ -449,10 +540,10 @@ public class InventoryTest {
      */
     @Test
     public void testToStringOneItem() {
-        Inventory inv = create("apples", 8);
+        Inventory inv = create("apples", APPLES);
 
         assertEquals("{(apples,8)}", inv.toString());
-        assertEquals(create("apples", 8), inv);
+        assertEquals(create("apples", APPLES), inv);
     }
 
     /**
@@ -460,7 +551,7 @@ public class InventoryTest {
      */
     @Test
     public void testToStringMultipleItems() {
-        Inventory inv = create("apples", 8, "oranges", 4);
+        Inventory inv = create("apples", APPLES, "oranges", ORANGES);
 
         String result = inv.toString();
 
@@ -469,7 +560,7 @@ public class InventoryTest {
         assertTrue(result.contains("(apples,8)"));
         assertTrue(result.contains("(oranges,4)"));
 
-        assertEquals(create("apples", 8, "oranges", 4), inv);
+        assertEquals(create("apples", APPLES, "oranges", ORANGES), inv);
     }
 
 }
